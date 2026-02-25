@@ -8,28 +8,26 @@ import os from 'os';
 
 // Only try to install on Linux
 if (os.platform() === 'linux') {
-  // Install rollup native module
+  // Rebuild rollup to ensure native modules are properly installed
   try {
-    console.log('Installing @rollup/rollup-linux-x64-gnu...');
-    execSync('npm install --no-save --include=optional @rollup/rollup-linux-x64-gnu', {
+    console.log('Rebuilding rollup with optional dependencies...');
+    execSync('npm rebuild rollup --include=optional', {
       stdio: 'inherit',
       env: process.env
     });
-    console.log('Successfully installed rollup native module');
+    console.log('Successfully rebuilt rollup');
   } catch (error) {
-    console.log('Rollup native module installation skipped (may already be installed)');
-  }
-
-  // Reinstall lightningcss with optional dependencies to ensure native modules are available
-  try {
-    console.log('Reinstalling lightningcss with optional dependencies...');
-    execSync('npm install --no-save --include=optional lightningcss', {
-      stdio: 'inherit',
-      env: process.env
-    });
-    console.log('Successfully reinstalled lightningcss');
-  } catch (error) {
-    console.log('Lightningcss reinstall skipped (may already be installed)');
+    // If rebuild fails, try installing the native module directly
+    try {
+      console.log('Installing @rollup/rollup-linux-x64-gnu...');
+      execSync('npm install --save-optional @rollup/rollup-linux-x64-gnu', {
+        stdio: 'inherit',
+        env: process.env
+      });
+      console.log('Successfully installed rollup native module');
+    } catch (error2) {
+      console.log('Rollup native module installation skipped');
+    }
   }
 
   console.log('Native module installation complete');
