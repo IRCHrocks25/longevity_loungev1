@@ -1,0 +1,12 @@
+# Nixpacks configuration (if Railway uses Nixpacks for this project)
+# Aligns with Railway Deployment Fix Documentation: pin Node 20 and use `npm install`.
+
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build"]
+
